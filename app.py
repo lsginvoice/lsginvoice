@@ -184,4 +184,4 @@ def generate_invoice_pdf(products, subtotal, tax_amount, total_with_tax, tax_rat
     return buffer.read()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8000)  # Use a different port, e.g., 8000
