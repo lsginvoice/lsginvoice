@@ -1,3 +1,5 @@
+import logging
+import traceback
 from flask import Flask, render_template, request, Response, session, redirect, url_for
 from functools import wraps
 from reportlab.lib.pagesizes import letter, inch
@@ -8,6 +10,9 @@ import io
 
 app = Flask(__name__)
 app.secret_key = "limasportinggoods"
+
+logging.basicConfig(level=logging.ERROR)
+logger = logging.getLogger(__name__)
 
 def login_required(f):
     @wraps(f)
@@ -88,9 +93,14 @@ def invoice():
 
         author = request.form.get('author')  # Get the author's name from the form
 
-        if 'generate_pdf' in request.form:
-            pdf = generate_invoice_pdf(products, subtotal, tax_amount, total_with_tax, tax_rate, author)
-            return Response(pdf, content_type='application/pdf')
+        try:
+            if 'generate_pdf' in request.form:
+                pdf = generate_invoice_pdf(products, subtotal, tax_amount, total_with_tax, tax_rate, author)
+                return Response(pdf, content_type='application/pdf')
+        except Exception as e:
+            logger.error("Error generating PDF: %s", str(e))
+            logger.error(traceback.format_exc())
+            return "An error occurred while generating the PDF."
 
     return render_template('invoice.html', num_items=num_items, products=products, subtotal=subtotal,
                            tax_amount=tax_amount, total_with_tax=total_with_tax, author=author)
