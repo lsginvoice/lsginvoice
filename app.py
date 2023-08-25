@@ -112,7 +112,7 @@ def generate_invoice_pdf(products, subtotal, tax_amount, total_with_tax, tax_rat
     story.append(title_paragraph)
 
     # Change the logo URL to the local file path
-    logo_path = 'static/LimaSportingGoods.jpg'  # Update with the correct path to your locally saved image
+    logo_path = '/home/lsginvoice/mysite/static/LimaSportingGoods.jpg'  # Update with the correct path to your locally saved image
     logo = Image(logo_path, width=80, height=80, hAlign='CENTER')
     story.append(logo)
 
