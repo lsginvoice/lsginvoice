@@ -66,7 +66,7 @@ def invoice():
     subtotal = 0
     tax_amount = 0
     total_with_tax = 0
-    
+
     num_items = 1
     author = None
 
