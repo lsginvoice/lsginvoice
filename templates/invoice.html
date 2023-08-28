@@ -16,59 +16,35 @@
         }
     </style>
     <script>
-        function generateTextFields() {
-            var numItems = parseInt(document.getElementById("num_items").value);
-            var itemsContainer = document.getElementById("items_container");
-            itemsContainer.innerHTML = ""; // Clear previous content
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('invoice-form');
+            var generatePdfButton = document.getElementById('generate-pdf-button');
 
-            for (var i = 0; i < numItems; i++) {
-                var itemDiv = document.createElement("div");
-                itemDiv.className = "item-container";
+            generatePdfButton.addEventListener('click', function () {
+                var formData = new FormData(form);
+                formData.append('generate_pdf', 'true'); // Add the generate_pdf field
 
-                var productNameLabel = document.createElement("label");
-                productNameLabel.textContent = "Product Name:";
-                var productNameInput = document.createElement("input");
-                productNameInput.type = "text";
-                productNameInput.name = "product_name_" + i;
-
-                var productPriceLabel = document.createElement("label");
-                productPriceLabel.textContent = "Product Price:";
-                var productPriceInput = document.createElement("input");
-                productPriceInput.type = "number";
-                productPriceInput.step = "0.01";
-                productPriceInput.name = "product_price_" + i;
-
-                var productQuantityLabel = document.createElement("label");
-                productQuantityLabel.textContent = "Product Quantity:";
-                var productQuantityInput = document.createElement("input");
-                productQuantityInput.type = "number";
-                productQuantityInput.name = "product_quantity_" + i;
-
-                itemDiv.appendChild(productNameLabel);
-                itemDiv.appendChild(productNameInput);
-                itemDiv.appendChild(document.createElement("br"));
-                itemDiv.appendChild(productPriceLabel);
-                itemDiv.appendChild(productPriceInput);
-                itemDiv.appendChild(document.createElement("br"));
-                itemDiv.appendChild(productQuantityLabel);
-                itemDiv.appendChild(productQuantityInput);
-
-                itemsContainer.appendChild(itemDiv);
-            }
-        }
-
-        function disableInputs() {
-            var inputs = document.querySelectorAll("input[type='text'], input[type='number']");
-            for (var i = 0; i < inputs.length; i++) {
-                inputs[i].disabled = true;
-            }
-        }
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/invoice', true);
+                xhr.responseType = 'blob'; // We expect a binary response
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var blob = xhr.response;
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'invoice.pdf';
+                        link.click();
+                    }
+                };
+                xhr.send(formData);
+            });
+        });
     </script>
 </head>
 <body>
     <h1>Invoice Statement: Lima Sporting Goods</h1>
 
-    <form method="POST">
+    <form id="invoice-form" method="POST">
         <div>
             <label for="author">Author:</label>
             <input type="text" id="author" name="author"><br><br>
@@ -95,7 +71,7 @@
             <label for="tax_rate">Tax Rate (%):</label>
             <input type="number" step="0.01" id="tax_rate" name="tax_rate" required>
         </div>
-        <button type="submit" name="generate_pdf" value="true">Generate PDF</button>
+        <button type="button" id="generate-pdf-button">Generate PDF</button>
     </form>
 
     <div id="invoice-details">

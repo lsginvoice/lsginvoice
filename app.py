@@ -161,19 +161,18 @@ def generate_invoice_pdf(products, subtotal, tax_amount, total_with_tax, tax_rat
     ]))
     story.append(table)
 
-    total_table_data = [
+    # Add calculated fields table
+    calculated_data = [
         [Paragraph("Subtotal:", content_style), Paragraph("${:.2f}".format(subtotal), content_style)],
         [Paragraph("Tax Amount ({}%):".format(tax_rate), content_style), Paragraph("${:.2f}".format(tax_amount), content_style)],
         [Paragraph("Total with Tax:", content_style), Paragraph("${:.2f}".format(total_with_tax), content_style)]
     ]
-    total_table = Table(total_table_data, colWidths=[370, 90])
-    total_table.setStyle(TableStyle([
-        ('BOX', (0, 0), (-1, -1), 1, colors.black),
-        ('INNERGRID', (0, 0), (-1, -1), 1, colors.black),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    calculated_table = Table(calculated_data, colWidths=[300, 100])
+    calculated_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (-1, -1), 'RIGHT'),
         ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
     ]))
-    story.append(total_table)
+    story.append(calculated_table)
 
     # Add author information centered under the table
     author_paragraph = Paragraph(f"<b>By:</b> {author}", content_style)
