@@ -38,13 +38,18 @@ class LongLine(Flowable):
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] == 'rob' and request.form['password'] == 'titos':
+        entered_username = request.form['username']
+        entered_password = request.form['password']
+
+        if entered_username.lower() == 'rob' and entered_password == 'titos':
             session['logged_in'] = True
             return redirect(url_for('invoice'))
         else:
             error = 'Invalid credentials. Please try again.'
+    
     if session.get("logged_in"):
         return redirect(url_for('invoice'))
+    
     return render_template('login.html', error=error)
 
 @app.route('/logout', methods=['POST'])

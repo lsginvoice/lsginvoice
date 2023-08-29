@@ -2,8 +2,9 @@
 <html>
 <head>
     <title>Invoice Statement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Add viewport meta tag -->
     <style>
-        /* Added CSS styles for spacing */
+        /* Existing styles for spacing */
         .item-container {
             margin-bottom: 20px;
             padding: 10px;
@@ -14,16 +15,93 @@
             float: left;
             margin-right: 20px;
         }
+
+        /* New styles for responsiveness */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Centering and responsive layout for the form */
+        #invoice-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative; /* Added for positioning of logout button */
+        }
+
+        /* Style for the logout button */
+        #logout-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            var form = document.getElementById('invoice-form');
+            var numItemsInput = document.getElementById('num_items');
             var generatePdfButton = document.getElementById('generate-pdf-button');
+            var itemsContainer = document.getElementById('items_container');
+    
+            numItemsInput.addEventListener('input', generateTextFields);
+    
+            function generateTextFields() {
+                var numItems = parseInt(numItemsInput.value);
+                itemsContainer.innerHTML = ""; // Clear previous content
+    
+                for (var i = 0; i < numItems; i++) {
+                    var itemDiv = document.createElement("div");
+                    itemDiv.className = "item-container";
+    
+                    var productNameLabel = document.createElement("label");
+                    productNameLabel.textContent = "Product Name:";
+                    var productNameInput = document.createElement("input");
+                    productNameInput.type = "text";
+                    productNameInput.name = "product_name_" + i;
+    
+                    var productPriceLabel = document.createElement("label");
+                    productPriceLabel.textContent = "Product Price:";
+                    var productPriceInput = document.createElement("input");
+                    productPriceInput.type = "number";
+                    productPriceInput.step = "0.01";
+                    productPriceInput.name = "product_price_" + i;
+    
+                    var productQuantityLabel = document.createElement("label");
+                    productQuantityLabel.textContent = "Product Quantity:";
+                    var productQuantityInput = document.createElement("input");
+                    productQuantityInput.type = "number";
+                    productQuantityInput.name = "product_quantity_" + i;
+    
+                    itemDiv.appendChild(productNameLabel);
+                    itemDiv.appendChild(productNameInput);
+                    itemDiv.appendChild(document.createElement("br"));
+                    itemDiv.appendChild(productPriceLabel);
+                    itemDiv.appendChild(productPriceInput);
+                    itemDiv.appendChild(document.createElement("br"));
+                    itemDiv.appendChild(productQuantityLabel);
+                    itemDiv.appendChild(productQuantityInput);
+    
+                    itemsContainer.appendChild(itemDiv);
+                }
+            }
 
             generatePdfButton.addEventListener('click', function () {
-                var formData = new FormData(form);
+                var formData = new FormData(document.getElementById('invoice-form'));
                 formData.append('generate_pdf', 'true'); // Add the generate_pdf field
-
+    
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '/invoice', true);
                 xhr.responseType = 'blob'; // We expect a binary response
@@ -69,9 +147,12 @@
         </div>
         <div>
             <label for="tax_rate">Tax Rate (%):</label>
-            <input type="number" step="0.01" id="tax_rate" name="tax_rate" required>
+            <input type="number" step="0.01" id="tax_rate" name="tax_rate" value="6.75" readonly>
         </div>
-        <button type="button" id="generate-pdf-button">Generate PDF</button>
+        <div>
+            <button type="button" id="generate-pdf-button">Generate PDF</button>
+        </div>
+        <button type="submit" id="logout-button" formaction="/logout" name="logout" value="1">Logout</button>
     </form>
 
     <div id="invoice-details">
@@ -107,9 +188,5 @@
         </table>
         {% endif %}
     </div>
-
-    <form method="POST" action="/logout">
-        <button type="submit" name="logout" value="1">Logout</button>
-    </form>
 </body>
 </html>
