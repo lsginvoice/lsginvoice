@@ -7,6 +7,8 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image, Flowable
 from reportlab.lib.styles import getSampleStyleSheet
 import io
+from reportlab.lib import colors
+from reportlab.platypus import TableStyle
 
 app = Flask(__name__)
 app.secret_key = "limasportinggoods"
@@ -126,6 +128,8 @@ def generate_invoice_pdf(products, subtotal, tax_amount, total_with_tax, tax_rat
     title_paragraph = Paragraph(title, title_style)
     story.append(title_paragraph)
 
+    
+
     # Change the logo URL to the local file path
     logo_path = '/home/lsginvoice/mysite/static/LimaSportingGoods.jpg'  # Update with the correct path to your locally saved image
     logo = Image(logo_path, width=80, height=80, hAlign='CENTER')
@@ -163,6 +167,7 @@ def generate_invoice_pdf(products, subtotal, tax_amount, total_with_tax, tax_rat
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
         ('GRID', (0, 0), (-1, -1), 1, colors.black)
+
     ]))
     story.append(table)
 
