@@ -16,15 +16,38 @@
             margin-right: 20px;
         }
 
+        /* Style for buttons */
+        .button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         /* New styles for responsiveness */
         body {
             font-family: Arial, sans-serif;
         }
-        
+
         /* Increase font size for input fields */
         input[type="text"],
         input[type="number"] {
             font-size: 16px; /* You can adjust the font size as needed */
+        }
+
+        /* Add a background image */
+        body {
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAHBBbCBsMN3cmjvVD845jTglIzu5xnAUn5w&usqp=CAU');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
         }
 
         h1 {
@@ -156,9 +179,9 @@
             <input type="number" step="0.01" id="tax_rate" name="tax_rate" value="6.75" readonly>
         </div>
         <div>
-            <button type="button" id="generate-pdf-button">Generate PDF</button>
+            <button type="button" class="button" id="generate-pdf-button">Generate PDF</button>
         </div>
-        <button type="submit" id="logout-button" formaction="/logout" name="logout" value="1">Logout</button>
+        <button type="submit" class="button" id="logout-button" formaction="/logout" name="logout" value="1">Logout</button>
     </form>
 
     <div id="invoice-details">
